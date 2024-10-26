@@ -1,14 +1,26 @@
 import os
-from evogym import EvoWorld, EvoSim, EvoViewer, sample_robot
+from evogym import EvoWorld, EvoSim, EvoViewer, sample_robot, get_full_connectivity
 import numpy as np
 
-world = EvoWorld.from_json(os.path.join("world_data", "simple_environment_with_robot.json"))
-robot_structure, robot_connections = sample_robot((5, 5))
-# world.add_from_array(
-#     name="robot", structure=robot_structure, x=3, y=1, connections=robot_connections
-# )
+world = EvoWorld.from_json(os.path.join("world_data", "simple_environment.json"))
+# robot_structure, robot_connections = sample_robot((5, 5))
+robot_structure = np.array(
+[[0, 0, 4, 0, 0],
+ [0, 1, 1, 1, 0],
+ [0, 0, 3, 0, 0],
+ [0, 1, 1, 1, 0],
+ [0, 0, 0, 0, 0]]
+)
 
-# world.pretty_print()
+robot_connections = get_full_connectivity(robot_structure)
+
+print(robot_structure)
+print(robot_connections)
+world.add_from_array(
+    name="robot", structure=robot_structure, x=3, y=2, connections=robot_connections
+)
+
+world.pretty_print()
 sim = EvoSim(world)
 sim.reset()
 viewer = EvoViewer(sim)
